@@ -1,39 +1,33 @@
 // Copyright (c) Martin Bjorkstrom. All rights reserved.
 // Licensed under the BSD 2-Clause License. See LICENSE in the project root for license information.
 
+using System;
+
 namespace NlayerApp.Domain 
 {
-	public abstract class Entity : Entity<int>
-	{
-		public override int GetHashCode()
+    public abstract class Entity<T> where T : struct
+    {
+        private int? m_requestedHashCode;
+
+        public Nullable<T> Id
         {
-        	return !IsTransient() ? Id.Value : object.GetHashCode();
+            get;
+            protected set;
         }
-	}
 
-	public abstract class Entity<T>
-	{
-		private int? m_requestedHashCode;
-
-		public T? Id 
-		{ 
-			get; 
-			protected set;
-		}
-
-		public virtual bool IsTransient()
-		{
-			return !Id.HasValue;
-		}
+        public virtual bool IsTransient()
+        {
+            return !Id.HasValue;
+        }
 
         public virtual void ChangeCurrentIdentity(T identity)
         {
             Id = identity;
         }
 
-		public override bool Equals(object obj)
+        public override bool Equals(object obj)
         {
-        	var item = obj as Entity<T>;
+            var item = obj as Entity<T>;
 
             if (ReferenceEquals(item, null))
             {
@@ -70,12 +64,12 @@ namespace NlayerApp.Domain
 
         public static bool operator ==(Entity<T> left, Entity<T> right)
         {
-        	return Equals(left,null) ? Equals(right, null) : left.Equals(right);
+            return Equals(left,null) ? Equals(right, null) : left.Equals(right);
         }
 
         public static bool operator !=(Entity<T> left, Entity<T> right)
         {
             return !(left == right);
         }
-	}
+    }
 }

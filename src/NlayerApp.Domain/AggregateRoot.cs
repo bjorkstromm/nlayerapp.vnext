@@ -5,9 +5,9 @@ using System;
 
 namespace NlayerApp.Domain 
 {
-	public abstract class AggregateRoot : Entity<Guid>
-	{
-		public override bool IsTransient()
+    public abstract class AggregateRoot : Entity<Guid>
+    {
+        public override bool IsTransient()
         {
             return !Id.HasValue || Id == Guid.Empty;
         }
@@ -20,13 +20,12 @@ namespace NlayerApp.Domain
             }
         }
 
-        public void ChangeCurrentIdentity(Guid identity)
+        public override void ChangeCurrentIdentity(Guid identity)
         {
             if (identity != Guid.Empty)
             {
                 Id = identity;
             }
         }
-        
-	}
+    }
 }
